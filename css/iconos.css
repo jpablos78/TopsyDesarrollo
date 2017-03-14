@@ -1,0 +1,250 @@
+/* 
+    Document   : iconos
+    Created on : Dec 31, 2012, 7:22:36 PM
+    Author     : Usuario
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.icon-new {
+    background-image: url(../images/iconos/icon-new.png) !important;
+}
+
+.icon-edit {
+    background-image: url(../images/iconos/icon-edit.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/iconos/icon-delete.png) !important;
+}
+
+.icon-save {
+    background-image: url(../images/iconos/icon-save.png) !important;
+}
+
+.icon-cancel {
+    background-image: url(../images/iconos/icon-cancel.png) !important;
+}
+
+.icon-user {
+    background-image: url(../images/iconos/icon-user.png) !important;
+}
+
+.icon-users {
+    background-image: url(../images/iconos/icon-users.png) !important;
+}
+
+.icon-usuarios {
+    background-image: url(../images/iconos/icon-usuarios.png) !important;
+}
+.icon-stop {
+    background-image: url(../images/iconos/icon-stop.png) !important;
+}
+
+.icon-favoritos {
+    background-image: url(../images/iconos/icon-favoritos.png) !important;
+}
+
+.icon-opciones {
+    background-image: url(../images/iconos/icon-opciones.png) !important;
+}
+
+.icon-home {
+    background-image: url(../images/iconos/icon-home.png) !important;
+}
+
+.icon-money {
+    background-image: url(../images/iconos/icon-money.png) !important;
+}
+
+.icon-note {
+    background-image: url(../images/iconos/icon-note.png) !important;
+}
+
+.icon-network {
+    background-image: url(../images/iconos/icon-network.png) !important;
+}
+
+.icon-terminal {
+    background-image: url(../images/iconos/icon-terminal.png) !important;
+}
+
+.icon-report {
+    background-image: url(../images/iconos/icon-report.png) !important;
+}
+
+.icon-configure {
+    background-image: url(../images/iconos/icon-configure.png) !important;
+}
+
+.icon-calendar {
+    background-image: url(../images/iconos/icon-calendar.png) !important;
+}
+
+.icon-lock {
+    background-image: url(../images/iconos/icon-lock.png) !important;
+}
+
+.icon-perfil {
+    background-image: url(../images/iconos/icon-perfil.png) !important;
+}
+
+.icon-key {
+    background-image: url(../images/iconos/icon-key.png) !important;
+}
+
+.icon-bogus {
+    background-image: url(../images/iconos/icon-bogus.png) !important;
+}
+
+.icon-reload {
+    background-image: url(../images/iconos/icon-reload.png) !important;
+}
+
+.icon-agregar {
+    background-image: url(../images/iconos/icon-agregar.png) !important;
+}
+
+.icon-nuevo-registro {
+    background-image: url(../images/iconos/icon-nuevo-registro.png) !important;
+}
+
+.icon-imprimir {
+    background-image: url(../images/iconos/icon-imprimir.png) !important;
+}
+
+.icon-cross {
+    background-image: url(../images/iconos/icon-cross.png);
+}
+
+.icon-pencil {
+    background-image: url(../images/iconos/icon-pencil.png);
+}
+
+.icon-add {
+    background-image: url(../images/iconos/icon-add.png) !important;
+}
+
+.icon-anular {
+    background-image: url(../images/iconos/icon-anular.png) !important;
+}
+
+.icon-deshacer {
+    background-image: url(../images/iconos/icon-deshacer.png) !important;
+}
+
+.icon-remove {
+    background-image: url(../images/iconos/icon-remove.png) !important;
+}
+
+.icon-reporte {
+    background-image: url(../images/iconos/icon-reporte.png) !important;
+}
+
+.icon-view-process-users {
+    background-image: url(../images/iconos/icon-view-process-users.png) !important;
+}
+
+.icon-accept {
+    background-image: url(../images/iconos/icon-accept.png) !important;
+}
+
+.icon-check {
+    background-image: url(../images/iconos/icon-check.png) !important;
+}
+
+.icon-warning {
+    background-image: url(../images/iconos/icon-warning.png) !important;
+}
+
+.icon-tabs {
+    background-image: url(../images/iconos/icon-tabs.png) !important;
+}
+
+.icon-folder-favorites {
+    background-image: url(../images/iconos/icon-folder-favorites.png) !important;
+}
+
+.icon-package-programs {
+    background-image: url(../images/iconos/icon-package-programs.png) !important;
+}
+
+.icon-layersman {
+    background-image: url(../images/iconos/icon-layersman.png) !important;
+}
+
+.icon-colorman {
+    background-image: url(../images/iconos/icon-colorman.png) !important;
+}
+
+.icon-comment {
+    background-image: url(../images/iconos/icon-comment.png) !important;
+}
+
+.icon-folder-1 {
+    background-image: url(../images/iconos/icon-folder-1.png) !important;
+}
+
+.icon-browser {
+    background-image: url(../images/iconos/icon-browser.png) !important;
+}
+
+.icon-chart {
+    background-image: url(../images/iconos/icon-chart.png) !important;
+}
+
+.icon-find {
+    background-image: url(../images/iconos/icon-find.png) !important;
+}
+
+.icon-detallado {
+    background-image: url(../images/iconos/icon-detallado.png) !important;
+}
+
+.icon-resumido {
+    background-image: url(../images/iconos/icon-resumido.png) !important;
+}
+
+.icon-encrypted {
+    background-image: url(../images/iconos/icon-encrypted.png) !important;
+}
+
+.icon-padlock {
+    background-image: url(../images/iconos/icon-padlock.png) !important;
+}
+
+.icon-unlocked {
+    background-image: url(../images/iconos/icon-unlocked.png) !important;
+}
+
+.icon-excel {
+    background-image: url(../images/iconos/icon-excel.png) !important;
+}
+
+.icon-save-32 {
+    background-image: url(../images/iconos/32x32/icon-save-32.png) !important;
+}
+
+.icon-nuevo-registro-32 {
+    background-image: url(../images/iconos/32x32/icon-nuevo-registro-32.png) !important;
+}
+
+.icon-imprimir-32 {
+    background-image: url(../images/iconos/32x32/icon-imprimir-32.png) !important;
+}
+
+.icon-exit-32 {
+    background-image: url(../images/iconos/32x32/icon-exit-32.png) !important;
+}
+
+.icon-add-orange-32 {
+    background-image: url(../images/iconos/32x32/icon-add-orange-32.png) !important;
+}
+
+.icon-recycle-32 {
+    background-image: url(../images/iconos/32x32/icon-recycle-32.png) !important;
+}
+
+.x-input-texto {
+    color: red;
+}

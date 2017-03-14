@@ -1,0 +1,30 @@
+/* style rows on mouseover */
+.x-grid-row-over .x-grid-cell-inner {
+    font-weight: bold;
+}
+/* shared styles for the ActionColumn icons */
+.x-action-col-cell img {
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+}
+/* custom icon for the "buy" ActionColumn icon */
+.x-action-col-cell img.icon-buy {
+    background-image: url(../icons/accept.gif);
+}
+/* custom icon for the "alert" ActionColumn icon */
+.x-action-col-cell img.icon-alert {
+    background-image: url(../icons/error.gif);
+}
+/* custom icon for the "alert" ActionColumn icon */
+.x-action-col-cell img.icon-cross {
+    background-image: url(../images/iconos/icon-cross.png);
+}
+
+.x-action-col-cell img.icon-modify {
+    background-image: url(../images/iconos/icon-pencil.png);
+}
+
+.x-action-col-cell img.icon-new {
+    background-image: url(../icons/pencil.png);
+}
