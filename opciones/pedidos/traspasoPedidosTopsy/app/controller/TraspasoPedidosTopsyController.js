@@ -39,6 +39,10 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
             },
             'traspasopedidostopsy grid checkcolumn': {
                 checkchange: this.onCheckchangeCheckcolumn
+            },
+            'traspasopedidostopsy actioncolumn': {
+                //click: this.onAction
+                itemclick: this.handleActionColumn
             }
         });
     },
@@ -196,7 +200,7 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
             }
         });
     },
-    onClickBtnExcel: function (button, e, options) {        
+    onClickBtnExcel: function (button, e, options) {
         var storePedidos = this.getStore('Pedidos');
 
         if (storePedidos.count() <= 0) {
@@ -218,10 +222,10 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
             }, record.data));
         });
 
-        datosStorePedidos = Ext.encode(datosStorePedidos);        
-        
+        datosStorePedidos = Ext.encode(datosStorePedidos);
+
         var box = Ext.MessageBox.wait('Por favor espere procesando ...', 'Enviando');
-        
+
         Ext.Ajax.request({
             url: 'app/data/pedidos.php',
             method: 'POST',
@@ -237,8 +241,8 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
             success: function (response) {
                 box.hide();
                 var text = Ext.decode(response.responseText);
-                var s = text.success;                
-                if (s) {                    
+                var s = text.success;
+                if (s) {
                     var ruta = text.message.reason;
                     window.open('../../../descargas/' + ruta);
                 } else {
@@ -250,7 +254,7 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
                     });
                 }
             },
-            failure: function (response, options) {                
+            failure: function (response, options) {
                 box.hide();
                 var text = Ext.decode(response.responseText);
                 Ext.Msg.show({
@@ -303,12 +307,24 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
     onCheckchangeCheckcolumn: function (field, rowIndex, checked, eOpts) {
         this.calcularTotales();
     },
-    cargarPedidos: function (filtro) {
+    handleActionColumn: function (column, action, view, rowIndex, colIndex, item, e) {
+        var store = view.up('traspasopedidostopsy grid').getStore();
+        var record = store.getAt(rowIndex);
+
+        switch (action) {
+            case 'eliminar':
+                this.eliminarRegistro(record);
+                break;
+        }
+    },
+    cargarPedidos: function (filtro) {       
         var me = this;
         var storePedidos = this.getStore('Pedidos');
         var cadena = Ext.util.Format.trim(Ext.getCmp('txtBusqueda').getValue());
         var fechaInicial = Ext.getCmp('txtFechaInicial').getRawValue();
         var fechaFinal = Ext.getCmp('txtFechaFinal').getRawValue();
+        
+        storePedidos.removeAll();
 
         storePedidos.proxy.setExtraParam('action', 'getPedidos');
         storePedidos.proxy.setExtraParam('filtro', filtro);
@@ -340,6 +356,60 @@ Ext.define('TraspasoPedidosTopsy.controller.TraspasoPedidosTopsyController', {
         Ext.getCmp('txtNumeroPedidosFiltro').setValue(numeroPedidosFiltro);
         Ext.getCmp('txtNumeroPedidosSel').setValue(numeroPedidosSel);
         Ext.getCmp('txtTotalPedidoC').setValue(totalPedidoC);
+    },
+    eliminarRegistro: function (record) {
+        var me = this;
+        
+        if (record) {
+            Ext.Msg.confirm('Mensaje del Sistema', 'Desea eliminar el Registro', function (btn) {
+                if (btn == 'yes') {
+                    var S_se_codigo = Ext.get("S_se_codigo").dom.value;
+                    var S_pe_codigo = Ext.get("S_pe_codigo").dom.value;
+                    var S_mn_codigo = Ext.get("S_mn_codigo").dom.value;
+                    var S_us_codigo = Ext.get("S_us_codigo").dom.value;                    
+
+                    var box = Ext.MessageBox.wait('Por favor espere procesando ...', 'Enviando');
+
+                    Ext.Ajax.request({
+                        url: 'app/data/pedidos.php',
+                        method: 'POST',
+                        params: {
+                            action: 'eliminarPedido',
+                            id: record.get('id'),
+                            S_us_codigo: S_us_codigo
+                        },
+                        success: function (response) {
+                            box.hide();
+
+                            var text = Ext.decode(response.responseText);                            
+                            var s = text.success;
+                            
+                            if (s) {                                                               
+                                me.cargarPedidos(Ext.getCmp('cmbFiltro').getValue());
+                            } else {
+                                Ext.Msg.show({
+                                    title: 'Mensaje del Sistema: INFORMACION ', //<- el título del diálogo
+                                    msg: text.message.reason, //<- El mensaje
+                                    buttons: Ext.Msg.OK, //<- Botones de SI
+                                    icon: Ext.Msg.ERROR // <- un ícono de error
+                                });
+                            }
+                        },
+                        failure: function (conn, response, options, eOpts) {
+                            box.hide();
+
+                            var text = Ext.decode(response.responseText);
+                            Ext.Msg.show({
+                                title: 'Mensaje del Sistema: INFORMACION ', //<- el título del diálogo
+                                msg: text.message.reason, //<- El mensaje
+                                buttons: Ext.Msg.OK, //<- Botones de SI
+                                icon: Ext.Msg.ERROR // <- un ícono de error
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 });
 

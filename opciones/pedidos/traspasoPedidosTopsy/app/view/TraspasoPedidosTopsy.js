@@ -3,7 +3,7 @@ Ext.define('TraspasoPedidosTopsy.view.TraspasoPedidosTopsy', {
     requires: ['Ext.form.Field'],
     defaultType: 'textfield',
     frame: true,
-    width: 1100,
+    width: 1130,
     //layout: 'auto',
     defaults: {
         allowBlank: false,
@@ -18,7 +18,7 @@ Ext.define('TraspasoPedidosTopsy.view.TraspasoPedidosTopsy', {
         {
             xtype: 'toolbar',
             dock: 'bottom',
-            items: [                
+            items: [
                 {
                     id: 'btnActualizar',
                     text: 'Actualizar',
@@ -151,6 +151,20 @@ Ext.define('TraspasoPedidosTopsy.view.TraspasoPedidosTopsy', {
                         xtype: 'rownumberer'
                     },
                     {
+                        xtype: 'actioncolumn',
+                        width: 25,
+                        items: [
+                            {
+                                iconCls: 'icon-cross',
+                                tooltip: 'Eliminar',
+                                align: 'right',
+                                handler: function (view, rowIndex, colIndex, item, e) {
+                                    this.fireEvent('itemclick', this, 'eliminar', view, rowIndex, colIndex, item, e);
+                                }
+                            }
+                        ]
+                    },
+                    {
                         text: 'Pedido',
                         dataIndex: 'id',
                         sortable: true,
@@ -270,14 +284,14 @@ Ext.define('TraspasoPedidosTopsy.view.TraspasoPedidosTopsy', {
                     {
                         xtype: 'numberfield',
                         id: 'txtNumeroPedidosFiltro',
-                        fieldLabel: 'Num. Pedidos',                        
+                        fieldLabel: 'Num. Pedidos',
                         labelWidth: 85,
                         width: 180
                     },
                     {
                         xtype: 'numberfield',
                         id: 'txtNumeroPedidosSel',
-                        fieldLabel: 'Num. Pedidos Sel',                        
+                        fieldLabel: 'Num. Pedidos Sel',
                         labelWidth: 100,
                         width: 195
                     },

@@ -25,6 +25,9 @@ Ext.define('PedidosProcesados.controller.PedidosProcesadosController', {
             'pedidosprocesados button[id=btnActualizar]': {
                 click: this.onClickBtnActualizar
             },
+            'pedidosprocesados button[id=btnExcel]': {
+                click: this.onClickBtnExcel
+            },
             'pedidosprocesados grid': {
                 itemdblclick: this.consultaPedidoDetalle
             }
@@ -87,6 +90,72 @@ Ext.define('PedidosProcesados.controller.PedidosProcesadosController', {
     },
     onClickBtnBuscar: function (button, e, options) {
         this.cargarPedidos(Ext.getCmp('cmbFiltro').getValue());
+    },
+    onClickBtnExcel: function (button, e, options) {
+        var storePedidos = this.getStore('Pedidos');
+
+        if (storePedidos.count() <= 0) {
+            Ext.Msg.show({
+                title: 'Mensaje del Sistema', //<- el título del diálogo
+                msg: "No existen registros, revise", //<- El mensaje
+                buttons: Ext.Msg.OK, //<- Botones de SI
+                icon: Ext.Msg.INFO
+            });
+            return;
+        }
+
+        var datosStorePedidos = [];
+        var contador = 0;
+
+        storePedidos.each(function (record) {
+            datosStorePedidos.push(Ext.apply({
+                id: record.id
+            }, record.data));
+        });
+
+        datosStorePedidos = Ext.encode(datosStorePedidos);
+
+        var box = Ext.MessageBox.wait('Por favor espere procesando ...', 'Enviando');
+
+        Ext.Ajax.request({
+            url: 'app/data/pedidos.php',
+            method: 'POST',
+            timeout: 9000000,
+            params: {
+                action: 'generarPedidoCabeceraExcel',
+                filtro: Ext.getCmp('cmbFiltro').getRawValue(),
+                busqueda: Ext.getCmp('txtBusqueda').getValue(),
+                fechaInicial: Ext.getCmp('txtFechaInicial').getRawValue(),
+                fechaFinal: Ext.getCmp('txtFechaFinal').getRawValue(),
+                datosStorePedidos: datosStorePedidos
+            },
+            success: function (response) {
+                box.hide();
+                var text = Ext.decode(response.responseText);
+                var s = text.success;
+                if (s) {
+                    var ruta = text.message.reason;
+                    window.open('../../../descargas/' + ruta);
+                } else {
+                    Ext.Msg.show({
+                        title: 'Mensaje del Sistema: INFORMACION ', //<- el título del diálogo
+                        msg: text.message.reason, //<- El mensaje
+                        buttons: Ext.Msg.OK, //<- Botones de SI
+                        icon: Ext.Msg.ERROR // <- un ícono de error
+                    });
+                }
+            },
+            failure: function (response, options) {
+                box.hide();
+                var text = Ext.decode(response.responseText);
+                Ext.Msg.show({
+                    title: 'Mensaje del Sistema: INFORMACION ', //<- el título del diálogo
+                    msg: text.message.reason, //<- El mensaje
+                    buttons: Ext.Msg.OK, //<- Botones de SI
+                    icon: Ext.Msg.ERROR // <- un ícono de error
+                });
+            }
+        });
     },
     onClickBtnActualizar: function (button, e, options) {
         this.cargarPedidos(Ext.getCmp('cmbFiltro').getValue());

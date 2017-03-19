@@ -18,7 +18,7 @@ Ext.define('PedidosProcesados.view.PedidosProcesados', {
         {
             xtype: 'toolbar',
             dock: 'bottom',
-            items: [  
+            items: [
                 '->',
                 {
                     id: 'btnActualizar',
@@ -26,7 +26,12 @@ Ext.define('PedidosProcesados.view.PedidosProcesados', {
                     iconCls: 'icon-reload',
                     action: 'grabar',
                     formBind: true
-                },                                
+                },
+                {
+                    id: 'btnExcel',
+                    text: 'Exportar a Excel',
+                    iconCls: 'icon-excel'
+                },
                 {
                     text: 'Cancelar',
                     iconCls: 'icon-cancel',
@@ -105,7 +110,7 @@ Ext.define('PedidosProcesados.view.PedidosProcesados', {
                         text: 'Buscar'
                     }
                 ]
-            },            
+            },
             {
                 xtype: 'gridpanel',
                 id: 'gridpanelcomision',
@@ -199,10 +204,10 @@ Ext.define('PedidosProcesados.view.PedidosProcesados', {
                     {
                         text: 'Nrodoc',
                         dataIndex: 'nrodoc',
-                        sortable: false,
+                        sortable: true,
                         hideable: false,
                         width: 50,
-                        align: 'right'                        
+                        align: 'right'
                     }
                 ]
             },
@@ -246,10 +251,10 @@ Ext.define('PedidosProcesados.view.PedidosProcesados', {
                     {
                         xtype: 'numberfield',
                         id: 'txtNumeroPedidosFiltro',
-                        fieldLabel: 'Num. Pedidos',                        
+                        fieldLabel: 'Num. Pedidos',
                         labelWidth: 85,
                         width: 180
-                    },                    
+                    },
                     {
                         id: 'txtTotalPedidoC',
                         fieldLabel: 'Total',

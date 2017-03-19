@@ -2,6 +2,8 @@
 
 include_once '../../../../../librerias/claseGenerica.php';
 
+date_default_timezone_set("America/Guayaquil");
+
 $action = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : null);
 
 switch ($action) {
@@ -13,6 +15,9 @@ switch ($action) {
         break;
     case 'procesarPedidos':
         procesarPedidos();
+        break;
+    case 'eliminarPedido':
+        eliminarPedido();
         break;
     case 'generarPedidoCabeceraExcel':
         generarPedidoCabeceraExcel();
@@ -235,9 +240,14 @@ function traspasoPedido($objetoBaseDatosInterfaz, $resultCabecera, $resultDetall
     $codaltrut = '';
     $nomruta = trim($resultCabecera[0]['nombre_ruta']);
     $transporte = '';
+    $deudaCliente = $resultCabecera[0]['deuda_cliente'];
+    
+    if ($deudaCliente > 0) {
+        $status = 'R';
+    }
 
     $observacion = trim(str_replace("'", "''", $observacion));
-    
+
     $query = "select isnull(MAX(nrodoc), 0) as nrodoc
               from transcab
               where clavedocum = 'PEDI'
@@ -287,7 +297,7 @@ function traspasoPedido($objetoBaseDatosInterfaz, $resultCabecera, $resultDetall
         $cantidad = $value['cantidad'];
         $impreng = $value['subtotal'];
         $totdto = 0;
-        $totimp = $value['iva']; 
+        $totimp = $value['iva'];
         $totreng = $value['total'];
         $imptoactual = $value['porcentaje_iva'];
         $porcdscto = 0;
@@ -321,7 +331,8 @@ function traspasoPedido($objetoBaseDatosInterfaz, $resultCabecera, $resultDetall
     if ($error == 'N') {
         $query = "
             EXEC SpProcesaPedidosWeb
-            @nrodoc = '$nrodoc'
+            @nrodoc = '$nrodoc',
+            @deuda = '$deudaCliente'     
             ";
 
         //echo $query;
@@ -355,6 +366,35 @@ function traspasoPedido($objetoBaseDatosInterfaz, $resultCabecera, $resultDetall
     }
 }
 
+function eliminarPedido() {
+    $id = $_POST['id'];
+    $S_us_codigo = $_POST['S_us_codigo'];
+
+    $objetoBaseDatos = new claseBaseDatos();
+    $objetoBaseDatos->conectarse();
+
+    if ($objetoBaseDatos->getErrorConexionNo()) {
+        echo $objetoBaseDatos->getErrorConexionJson();
+    } else {
+        $query = "
+                    EXEC SP_PEDIDO_CABECERA
+                    @id = '$id',
+                    @S_US_CODIGO = '$S_us_codigo',
+                    @OPERACION = 'DP'
+                ";
+
+        //echo $query;
+
+        $result = $objetoBaseDatos->queryJson($query);
+
+        if ($objetoBaseDatos->getError()) {
+            echo $objetoBaseDatos->getErrorJson('');
+        } else {
+            echo $result;
+        }
+    }
+}
+
 function generarPedidoCabeceraExcel() {
     $filtro = $_POST['filtro'];
     $busqueda = $_POST['busqueda'];
@@ -369,7 +409,7 @@ function generarPedidoCabeceraExcel() {
         echo $objetoBaseDatos->getErrorConexionJson();
         return;
     }
-                    
+
     //$datosStore = str_replace('\"', '', $datosStore);      
     //$datosStore = str_replace('\u00c1', 'Á', $datosStore);
     //$datosStore = str_replace('\u00c9', 'É', $datosStore);
@@ -385,8 +425,9 @@ function generarPedidoCabeceraExcel() {
     //$datosStore = str_replace('\u00f1', 'ñ', $datosStore);           
     //echo $datosStore;
     $records = json_decode(stripslashes($datosStore));
-    
+
     $hoy = date("Ymd His");
+    $fechaReporte = "Fecha Reporte: " . date("d/m/Y H:i:s");
 
     $nombreExcel = $hoy . '.xlsx';
     //$filezip = '../../../../../descargas/comisiones/abc.zip';
@@ -403,8 +444,8 @@ function generarPedidoCabeceraExcel() {
             ->setKeywords("Reporte de Pedidos Topsy") //Etiquetas
             ->setCategory("Reporte de Pedidos Topsy"); //Categorias
 
-    $tituloReporte = "Reporte en Excel de Pedidos Topsy";   
-    
+    $tituloReporte = "Reporte en Excel de Pedidos Topsy";
+
     generarDetalleExcel($objPHPExcel, $records);
 
     $objPHPExcel->setActiveSheetIndex(0);
@@ -438,19 +479,15 @@ function generarPedidoCabeceraExcel() {
             break;
     }
 
-    
-
     $objPHPExcel->getActiveSheet()->setCellValue('B2', 'TOPSY REPORTE EXCEL');
 
     $objPHPExcel->getActiveSheet()->setCellValue('B4', $filtro);
-    //$objPHPExcel->getActiveSheet()->setCellValue('B4', $busqueda);
-    //$objPHPExcel->getActiveSheet()->setCellValue('B5', $fechaInicial);
-    //$objPHPExcel->getActiveSheet()->setCellValue('B6', $fechaFinal);
+    $objPHPExcel->getActiveSheet()->setCellValue('B5', $fechaReporte);
 
     $objPHPExcel->getActiveSheet()->getStyle('B2:B8')->getFont()->setBold(true);
 
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-    $objWriter->save('../../../../../descargas/' . $nombreExcel);    
+    $objWriter->save('../../../../../descargas/' . $nombreExcel);
 
     $result = $objetoBaseDatos->getCadenaJson($nombreExcel, true);
 
@@ -462,7 +499,7 @@ function generarDetalleExcel($objPHPExcel, $records) {
     $titulosColumnas = array('Pedido', 'Fono', 'Cliente', 'Vendedor', 'Ruta',
         'Fecha', 'Fecha Pedido', 'Observacion', 'Total', 'Sel');
 
-    $filaEncabezados = 6; //fila donde estan los encabezados
+    $filaEncabezados = 7; //fila donde estan los encabezados
 
     $letra = 'A';
     for ($i = 0; $i < count($titulosColumnas); $i++) {
@@ -473,7 +510,7 @@ function generarDetalleExcel($objPHPExcel, $records) {
     $objPHPExcel->getActiveSheet()
             ->getStyle('B' . $filaEncabezados . ':V' . $filaEncabezados)->getFont()->setBold(true);
 
-    $i = 7; //desde que fila se comienzan a escribir los datos    
+    $i = 8; //desde que fila se comienzan a escribir los datos    
 
     $styleBorderArray = array(
         'borders' => array(
@@ -492,15 +529,15 @@ function generarDetalleExcel($objPHPExcel, $records) {
     $sumCheque = array();
     $inicial = $i;
     $numeroPedidos = 0;
-    $numeroPedidosSel = 0;    
-    
+    $numeroPedidosSel = 0;
+
     foreach ($records as $record) {
         $sel = 'N';
         if ($record->sel) {
             $sel = 'S';
             $numeroPedidosSel++;
         }
-		
+
         $objPHPExcel->setActiveSheetIndex($hoja)
                 ->setCellValueExplicit('B' . $i, trim($record->id), PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit('C' . $i, trim($record->id_pedido_fono), PHPExcel_Cell_DataType::TYPE_STRING)
@@ -519,8 +556,8 @@ function generarDetalleExcel($objPHPExcel, $records) {
     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
     $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
     $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(12);
-    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(25);
-    $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);
+    $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(40);
     $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(40);
     $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
     $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
