@@ -369,23 +369,23 @@ function generarPedidoCabeceraExcel() {
         echo $objetoBaseDatos->getErrorConexionJson();
         return;
     }
-                      
-    $datosStore = str_replace('\"', '', $datosStore);      
-    $datosStore = str_replace('\u00c1', 'Á', $datosStore);
-    $datosStore = str_replace('\u00c9', 'É', $datosStore);
-    $datosStore = str_replace('\u00cd', 'Í', $datosStore);
-    $datosStore = str_replace('\u00d3', 'Ó', $datosStore);
-    $datosStore = str_replace('\u00da', 'Ú', $datosStore);
-    $datosStore = str_replace('\u00e1', 'á', $datosStore);
-    $datosStore = str_replace('\u00e9', 'é', $datosStore);
-    $datosStore = str_replace('\u00ed', 'í', $datosStore);
-    $datosStore = str_replace('\u00f3', 'ó', $datosStore);
-    $datosStore = str_replace('\u00fa', 'ú', $datosStore);    
-    $datosStore = str_replace('\u00d1', 'Ñ', $datosStore);
-    $datosStore = str_replace('\u00f1', 'ñ', $datosStore);           
-    
+                    
+    //$datosStore = str_replace('\"', '', $datosStore);      
+    //$datosStore = str_replace('\u00c1', 'Á', $datosStore);
+    //$datosStore = str_replace('\u00c9', 'É', $datosStore);
+    //$datosStore = str_replace('\u00cd', 'Í', $datosStore);
+    //$datosStore = str_replace('\u00d3', 'Ó', $datosStore);
+    //$datosStore = str_replace('\u00da', 'Ú', $datosStore);
+    //$datosStore = str_replace('\u00e1', 'á', $datosStore);
+    //$datosStore = str_replace('\u00e9', 'é', $datosStore);
+    //$datosStore = str_replace('\u00ed', 'í', $datosStore);
+    //$datosStore = str_replace('\u00f3', 'ó', $datosStore);
+    //$datosStore = str_replace('\u00fa', 'ú', $datosStore);    
+    //$datosStore = str_replace('\u00d1', 'Ñ', $datosStore);
+    //$datosStore = str_replace('\u00f1', 'ñ', $datosStore);           
+    //echo $datosStore;
     $records = json_decode(stripslashes($datosStore));
-
+    
     $hoy = date("Ymd His");
 
     $nombreExcel = $hoy . '.xlsx';
@@ -500,7 +500,7 @@ function generarDetalleExcel($objPHPExcel, $records) {
             $sel = 'S';
             $numeroPedidosSel++;
         }
-
+		
         $objPHPExcel->setActiveSheetIndex($hoja)
                 ->setCellValueExplicit('B' . $i, trim($record->id), PHPExcel_Cell_DataType::TYPE_STRING)
                 ->setCellValueExplicit('C' . $i, trim($record->id_pedido_fono), PHPExcel_Cell_DataType::TYPE_STRING)
